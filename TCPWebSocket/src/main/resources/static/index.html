@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript">
+
+        var data = [];
+        var count = 0;
+        var humidity = 0;
+        var temperature = 0;
+        var time = 0;
+        window.onload = function () {
+            var websocket = null;
+            if ('WebSocket' in window) {
+                websocket = new WebSocket("ws://localhost:8080/index");//向要显示数据的网页发送websocket连接请求
+            } else {
+                alert('当前浏览器不支持Websocket')
+            }
+            websocket.onerror = function () {
+                alert(window.location.href);
+            };
+            websocket.onopen = function () {
+                //alert("Websocket建立成功");
+            }
+            websocket.onmessage = function (event) {
+                setMessageInnerHTML(event.data);
+            }
+
+            websocket.onclose = function () {
+                //alert("Websocket连接关闭")
+            }
+
+            window.onbeforeunload = function () {
+                closeWebSocket();
+            }
+
+            function getTime() {
+                var dateObj = new Date();
+                var year = dateObj.getFullYear();
+                var month = dateObj.getMonth()+1;
+                var day = dateObj.getDate();
+                var hour = dateObj.getHours();
+                var min = dateObj.getMinutes();
+                return year + "-" + month + "-" + day + "-" + hour + "-" + min;
+            }
+
+
+            function setMessageInnerHTML(innerHTML) {
+                var json = {};
+                json.time = getTime();
+                json.message = innerHTML;
+                data[count++] = json;
+                //document.getElementById('text').innerHTML += JSON.stringify(data[count]) + '<br/>';
+                var str = JSON.stringify(json.message);
+                time = JSON.stringify(json.time);
+                humidity = parseFloat(JSON.stringify(json.message).substring(str.indexOf("湿") + 3, str.indexOf("%")));
+                temperature = parseFloat(JSON.stringify(json.message).substring(str.indexOf("温") + 3, str.indexOf("℃")));
+                document.getElementById('text').innerHTML += "时间:"+ time + "\t湿度:" + humidity.toString() + '%RH\t温度:'+ temperature.toString() + '℃\n';
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    title: {
+                        text: "温度湿度动态显示图"
+                    },
+                    data: [{
+                        type: "column",
+                        yValueFormatString: "#,###.#",
+                        indexLabel: "{y}",
+                        dataPoints: [
+                            {label: "boiler1", y: humidity},
+                            {label: "boiler2", y: temperature},
+                        ]
+                    }]
+                });
+
+                function updateChart() {
+                    var boilerColor, yVal;
+                    var dps = chart.options.data[0].dataPoints;
+                    for (var i = 0; i < dps.length; i++) {
+                        yVal = dps[i].y;
+                        boilerColor1 = yVal > 120 ? "#FF2500" : yVal >= 91 ? "#FF6000" : yVal >= 20 ? "#6B8E23 " : null;
+                        boilerColor2 = yVal > 37 ? "#FF2500" : yVal >= 27 ? "#FF6000" : yVal >= 0 ? "#6B8E23 " : null;
+                        if (i === 0) {
+                            dps[i] = {label: "湿度 %RH", y: yVal, color: boilerColor1};
+                        } else if (i === 1) {
+                            dps[i] = {label: "温度 ℃", y: yVal, color: boilerColor2};
+                        }
+                    }
+                    chart.options.data[0].dataPoints = dps;
+                    chart.render();
+                };
+                updateChart();
+            }
+
+        }
+
+        function search() {
+            var str = '"'+ document.getElementById('val').value + '"';
+            for (var i = 0 ;i<data.length;i++){
+                if (JSON.stringify(data[i].time) == str){
+                    alert(JSON.stringify(data[i].message));
+                }
+            }
+        }
+
+        function closeWebSocket() {
+            websocket.close();
+        }
+
+    </script>
+    <script src="js/canvasjs.min.js"></script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; max-width: 850px; margin: 0px auto;"></div>
+
+<div id="message">
+    <div class="parent">
+        <input id="val" type="text" value="">
+        <input id="search" type="button" value="按时间搜索" onclick="search()">
+    </div>
+    <textarea id="text" readonly></textarea>
+</div>
+</body>
+</html>
