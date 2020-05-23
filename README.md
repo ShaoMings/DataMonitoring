@@ -16,7 +16,7 @@
   (3)如果再下载依赖(pom.xml)的过程中速度慢，请先排除是否是您的网络本身问题，如果不是请修改，基于阿里云的Maven镜像源
      在IDEA中找到File->Settings->Build,Execution,Deployment->Build Tools->Maven右侧的User Settings file:
      在Override上打勾 然后将内容框里面指定的文件进行重新编辑，将以下内容覆盖其中:
-     
+```
   <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
@@ -117,6 +117,9 @@
     </snapshots>
 </repository>
 </settings>
+
+
+```
 
   (4)完成以上加载步骤pom.xml不会显示红色错误即可，然后可以构建运行该程序,在浏览器中输入localhost:8080  即可访问主页，此时回到IDEA界面的控制台      (Console) 会提示 输入待监听的端口:  这里可以自定义  我以10000端口为例输入并回车。
      这时主程序的serversocket已经在对该端口进行监听  你会看到页面并没有反应，无需刷新，因为还没有接收到来自本地localhost的socket连接，这里我        提供了一个模拟客户端监测数据的程序TCPClient.java
