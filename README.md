@@ -2,10 +2,21 @@
 一个嵌入式开发基于tcp协议serversocket端，用于显示数据
 
 
-1.环境配置说明:
-  请确保在您的机器上已经安装Java JDK运行环境 这里使用IDEA作为例子工具说明配置环境步骤。
+1.JDK环境配置说明:
+  (1)下载对应平台的JDK，这里以Windows平台为例 下载链接https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
+     下载后安装即可，路径可自行更改，后面要用到。注：当提示安装JRE时，可以选择不要安装。
+     
+  (2)右键桌面上“我的电脑”>>“属性”，在弹出的页面上点击“高级系统设置”，在弹出的“系统属性”窗口中“高级”标签页下点击“环境变量”按钮，在弹出的“环境变
+     量”窗口中，点击下方的“新建”按钮，在弹出的“新建系统变量”窗口中，新建一个名为“JAVA_HOME”的环境变量，变量值为Java的安装路径。
+     
+  (3)设置Path环境变量，该变量已经存在，所以在列表中选择Path，点击下方的“编辑”按钮，在弹出的窗口中添加如下信息：
+     %JAVA_HOME%\bin;%JAVA_HOME%\jre\bin，然后点击“确认”按钮即可。
+     
+  (4)和JAVA_HOME一样，新建一个名为“classpath”的环境变量，变量值为：%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar
   
-2.具体环境配置步骤:
+  (5)在配置好环境变量后，可以进入cmd中检查Java是否安装正确，检查的命令为 java -version ,如果能正确的输出Java的版本和JVM版本信息，则说明Java安      装正确。
+  
+2.IDEA环境配置步骤:
 
   (1)下载该版本源码,直接使用git clone 或者 download 到您的机器上
   
