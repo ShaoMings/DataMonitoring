@@ -1,8 +1,6 @@
 # DataMonitoring
 一个嵌入式开发基于tcp协议serversocket端，用于显示数据
 
-注意:请先下载本说明指导(README.md)方便阅读
-
 
 1.环境配置说明:
   请确保在您的机器上已经安装Java JDK运行环境 这里使用IDEA作为例子工具说明配置环境步骤。
