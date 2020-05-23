@@ -3,6 +3,7 @@
 
 
 1.JDK环境配置说明:
+  
   (1)下载对应平台的JDK，这里以Windows平台为例 下载链接https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html
      下载后安装即可，路径可自行更改，后面要用到。注：当提示安装JRE时，可以选择不要安装。
      
